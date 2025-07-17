@@ -8,7 +8,7 @@
   <meta name="keywords" content="">
   <meta name="theme-color" content="#10b981">
 
-  <link rel="canonical" href="http://example.com/2025/07/14/attention%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88/">
+  <link rel="canonical" href="http://example.com/2025/07/15/attention%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88/">
 
   
     <link rel="shortcut icon" href="/img/page_avatar.png">
@@ -17,18 +17,23 @@
   <meta name="description" content="前言 近期看了anthropic的一些关于attention可解释性的文章，感觉很有意思，试着做了一些总结和思考，也希望给之后继续学习ml system层面对transformer的优化明确一些较为基本的常识，现记录在此。 回顾attention attention数学形式 首先，我们先不要去考虑multi head和mask的事情（后文会慢慢引出），先从最为简单和朴素的attention开始，这">
 <meta property="og:type" content="article">
 <meta property="og:title" content="attention到底在做什么">
-<meta property="og:url" content="http://example.com/2025/07/14/attention%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:url" content="http://example.com/2025/07/15/attention%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88/index.html">
 <meta property="og:site_name" content="Home">
 <meta property="og:description" content="前言 近期看了anthropic的一些关于attention可解释性的文章，感觉很有意思，试着做了一些总结和思考，也希望给之后继续学习ml system层面对transformer的优化明确一些较为基本的常识，现记录在此。 回顾attention attention数学形式 首先，我们先不要去考虑multi head和mask的事情（后文会慢慢引出），先从最为简单和朴素的attention开始，这">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-07-14T13:05:00.000Z">
-<meta property="article:modified_time" content="2025-07-16T02:22:42.742Z">
+<meta property="og:image" content="http://example.com/img/residual_stream.png">
+<meta property="og:image" content="http://example.com/img/information_exchange.png">
+<meta property="og:image" content="http://example.com/img/OV_QK.png">
+<meta property="og:image" content="http://example.com/img/incontext_learning_eval.png">
+<meta property="article:published_time" content="2025-07-15T13:05:00.000Z">
+<meta property="article:modified_time" content="2025-07-17T12:16:37.075Z">
 <meta property="article:author" content="原嘉锐">
 <meta property="article:tag" content="ML基础">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/residual_stream.png">
   <meta name="generator" content="Hexo 7.3.0">
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/07/14/attention%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88/"},"headline":"attention到底在做什么","description":"前言 近期看了anthropic的一些关于attention可解释性的文章，感觉很有意思，试着做了一些总结和思考，也希望给之后继续学习ml system层面对transformer的优化明确一些较为基本的常识，现记录在此。 回顾attention attention数学形式 首先，我们先不要去考虑multi head和","datePublished":"2025-07-14T13:05:00.000Z","dateModified":"2025-07-16T02:22:42.742Z","author":{"@type":"Person","name":"原嘉锐"},"publisher":{"@type":"Organization","name":"Home","logo":{"@type":"ImageObject","url":"http://example.com/img/page_avatar.png"}}}
+{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/07/15/attention%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88/"},"headline":"attention到底在做什么","description":"前言 近期看了anthropic的一些关于attention可解释性的文章，感觉很有意思，试着做了一些总结和思考，也希望给之后继续学习ml system层面对transformer的优化明确一些较为基本的常识，现记录在此。 回顾attention attention数学形式 首先，我们先不要去考虑multi head和","datePublished":"2025-07-15T13:05:00.000Z","dateModified":"2025-07-17T12:16:37.075Z","author":{"@type":"Person","name":"原嘉锐"},"publisher":{"@type":"Organization","name":"Home","logo":{"@type":"ImageObject","url":"http://example.com/img/page_avatar.png"}}}
 </script>
 
   
@@ -130,7 +135,7 @@
       <div class="sea-post-meta sea-post-meta__center">
         <div class="sea-post-time">
   <svg t="1716964550804" class="sea-svg-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2621" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M805.49888 981.49888l-602.3168-0.76288c-86.59456-8.192-154.56768-81.3056-154.56768-170.01472L48.6144 291.73248c0-94.1568 76.60032-170.75712 170.7776-170.75712l586.10176 0c94.1568 0 170.73152 76.60032 170.73152 170.75712L976.22528 810.7008C976.2304 904.87296 899.63008 981.49888 805.49888 981.49888L805.49888 981.49888zM219.3664 190.57152c-55.79776 0-101.20192 45.38368-101.20192 101.18144l0 518.96832c0 55.79776 45.40416 101.20704 101.20192 101.20704l586.13248 0c55.77728 0 101.16096-45.40928 101.16096-101.20704L906.65984 291.73248c0-55.79776-45.38368-101.18656-101.16096-101.18656L219.3664 190.54592 219.3664 190.57152zM698.84416 290.51904c-25.60512 0-46.38208-20.77696-46.38208-46.38208l0-158.6688c0-25.6 20.77696-46.38208 46.38208-46.38208 25.6 0 46.38208 20.78208 46.38208 46.38208L745.22624 244.1216C745.22624 269.7472 724.46976 290.51904 698.84416 290.51904L698.84416 290.51904zM315.65824 290.51904c-25.60512 0-46.38208-20.77696-46.38208-46.38208l0-158.6688c0-25.6 20.77696-46.38208 46.38208-46.38208 25.6 0 46.38208 20.78208 46.38208 46.38208L362.04032 244.1216C362.04032 269.7472 341.28896 290.51904 315.65824 290.51904L315.65824 290.51904zM534.8864 794.78784l-44.27264 0c-25.6 0-46.38208-20.77696-46.38208-46.38208 0-25.6 20.78208-46.38208 46.38208-46.38208l44.27264 0c25.6 0 46.38208 20.78208 46.38208 46.38208C581.26848 774.01088 560.4864 794.78784 534.8864 794.78784L534.8864 794.78784zM930.79552 452.608 121.24672 452.608c-25.60512 0-46.38208-20.78208-46.38208-46.38208 0-25.60512 20.77696-46.38208 46.38208-46.38208l809.5744 0c25.6 0 46.38208 20.77696 46.38208 46.38208C977.2032 431.82592 956.42624 452.608 930.79552 452.608L930.79552 452.608zM327.92576 649.03168l-44.27264 0c-25.6 0-46.38208-20.78208-46.38208-46.38208 0-25.60512 20.78208-46.38208 46.38208-46.38208l44.27264 0c25.6 0 46.38208 20.77696 46.38208 46.38208C374.30784 628.25472 353.52576 649.03168 327.92576 649.03168L327.92576 649.03168zM534.8864 649.03168l-44.27264 0c-25.6 0-46.38208-20.78208-46.38208-46.38208 0-25.60512 20.78208-46.38208 46.38208-46.38208l44.27264 0c25.6 0 46.38208 20.77696 46.38208 46.38208S560.4864 649.03168 534.8864 649.03168L534.8864 649.03168zM741.27872 649.03168l-44.26752 0c-25.60512 0-46.38208-20.78208-46.38208-46.38208 0-25.60512 20.77696-46.38208 46.38208-46.38208l44.26752 0c25.60512 0 46.38208 20.77696 46.38208 46.38208C787.6608 628.25472 766.90944 649.03168 741.27872 649.03168L741.27872 649.03168zM327.92576 794.78784l-44.27264 0c-25.6 0-46.38208-20.77696-46.38208-46.38208 0-25.6 20.78208-46.38208 46.38208-46.38208l44.27264 0c25.6 0 46.38208 20.78208 46.38208 46.38208C374.30784 774.01088 353.52576 794.78784 327.92576 794.78784L327.92576 794.78784zM741.27872 794.78784l-44.26752 0c-25.60512 0-46.38208-20.77696-46.38208-46.38208 0-25.6 20.77696-46.38208 46.38208-46.38208l44.26752 0c25.60512 0 46.38208 20.78208 46.38208 46.38208C787.6608 774.01088 766.90944 794.78784 741.27872 794.78784L741.27872 794.78784z" p-id="2622"></path></svg>
-  <time datetime="2025-07-14T13:05:00.000Z">2025-07-14</time>
+  <time datetime="2025-07-15T13:05:00.000Z">2025-07-15</time>
 </div>
         
   <div class="sea-post-categories">
@@ -256,17 +261,35 @@ M347 1759 V0 H263 V1759 v1800 v1759 h84z"/></svg></span></span></span><span clas
 </div>
 <h3 id="multi-heads">multi heads</h3>
 <p>那么以上就是最为朴素的attention结构，也可以被称为一个head，那自然就会有<strong>multi heads</strong>的attention结构，它可以使得模型可以关注到更多层面的信息。首先输出x(维度为d_model)会被切割为若干个等长的vector，常见的有32、64等，然后每一个切割后的vector会由一个head计算，最终得到的所有vector会被直接concate在一起，并由一个<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>O</mi></msub></mrow><annotation encoding="application/x-tex">W_O</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">O</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>做一次线性变化作为输出，这就是multi head attention的结构。</p>
-<h2 id="从incontext-learning能力出发分析attention到底做了什么">从incontext learning能力出发分析attention到底做了什么</h2>
+<h2 id="有趣的数学建模">有趣的数学建模</h2>
 <h3 id="总述">总述</h3>
 <p>attention结构被广泛应用在transformer架构中，我们的分析聚焦于现在主流的decoder-only的transformer结构，同时为了将关注点放在attention上并简化模型，我们忽略掉MLP，bias等。</p>
-<p>我们先来建立一个感觉，从最简单的bigram词统计开始到其他更复杂的next token prediction的方法，对于下一个词的预测其实都可以理解为是对前文信息的汇总，bigram是容易理解的，它通过词统计来完成“训练”，然后根据距离待预测位置最近的一个token的信息来得到输出的token。</p>
+<p>我们先来建立一个感觉，从最简单的bigram词统计开始到其他更复杂的next token prediction的方法，对于下一个词的预测其实都可以理解为是对前文信息的汇总，bigram是容易理解的，它通过词统计来完成“训练”，然后根据距离待预测位置最近的一个token的信息来得到预测的token。</p>
 <p>相对复杂的attention通过Q,K点乘得到的Attention矩阵来代表关注程度，V是sequence每个token位置所包含的信息,Attention矩阵与V相乘则是信息聚合的过程，信息聚合的结果就是attention的输出。</p>
-<p>完全基于统计的bigram对于统计中从未出现过的新词往往无能为力，但基于attention的transformer却涌现出来一个比较有趣的能力——incontext learning能力，也即从未在训练数据中出现过的词，transformer仍然能够理解其含义并用于预测中，这体现出了基于attention的transformer信息聚合能力的强大，接下来我们将从零层attention结构的transformer开始分析incontext learning能力的涌现，感受attention聚集信息的过程。</p>
+<p>完全基于统计的bigram对于统计中从未出现过的新词往往无能为力，但基于attention的transformer却涌现出来一个比较有趣的能力——incontext learning能力，也即从未在训练数据中出现过的词，transformer仍然能够理解其含义并用于预测中，这体现出了基于attention的transformer信息聚合能力的强大。</p>
 <h3 id="几个数学建模">几个数学建模</h3>
-<h3 id="Zero-Layer-Transformer">Zero Layer Transformer</h3>
-<h3 id="One-Layer-Transformer">One Layer Transformer</h3>
-<h3 id="Two-Layer-Transformer">Two Layer Transformer</h3>
+<ul>
+<li>
+<p><strong>残差流</strong></p>
+<p>在transformer中，为了防止梯度消失，引入了残差的方法，将一个block的输出和其输入相加作为最终的输出。</p>
+<p><img src="/img/residual_stream.png" alt="alt text" /></p>
+<p>上图是一个multi head的示意图，我们主要分析左侧，每一个block会把上一个block的输出通过<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>I</mi></msub></mrow><annotation encoding="application/x-tex">W_I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07847em;">I</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>线性变化，然后经过attention进行计算，最后通过<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>O</mi></msub></mrow><annotation encoding="application/x-tex">W_O</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">O</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>线性变化并进行残差操作作为输出。</p>
+<p>这里需要注意，由于需要进行直接的相加，所以必须保证输入和输出维度相同，也即最左侧的通道总是维度不变的向量，这就是残差流，维度大小蕴含着信息的压缩程度，可以理解为带宽。</p>
+</li>
+<li>
+<p><strong>信息交换</strong></p>
+<p>在<strong>残差流</strong>章节的图中是把一个sequence的所有token都放在一起的，实际上左侧的通道可以理解为是有token数条小通道捆绑在一起的，然后右侧block做的事情就是在这些独立的channel之间交流信息（因为线性变化可以跨矩阵列），这就是信息交流的过程。</p>
+<p><img src="/img/information_exchange.png" alt="alt text" /></p>
+</li>
+<li>
+<p><strong>QK回路与OV回路</strong></p>
+<p>QK回路和OV回路是对不同小通道之间信息交流的进一步细化的建模，下图中dst token即预测位置前一位的token，src为该token前任意一个token，首先二者通过QK回路计算出一个attention权重，该权重会与src token的embedding值相乘并通过src上的OV回路汇集到output中，通过这种建模我们可以把attention做的事情分为两个完全独立的步骤。</p>
+<p><img src="/img/OV_QK.png" alt="alt text" /></p>
+</li>
+</ul>
 <h3 id="incontext-learning能力评测">incontext learning能力评测</h3>
+<p>incontext learning能力在两层以后开始涌现，关于利用上述建模对incontext learning的更多的分析可以参考&quot;参考文献&quot;板块的第二篇论文，该论文进行了丰富的实验来进行分析，在此就不放实验设计了。</p>
+<p><img src="/img/incontext_learning_eval.png" alt="alt text" /></p>
 <h2 id="参考文献">参考文献</h2>
 <p>A Mathematical Framework for Transformer Circuits<br />
 <a target="_blank" rel="noopener" href="https://transformer-circuits.pub/2021/framework/index.html">https://transformer-circuits.pub/2021/framework/index.html</a></p>
