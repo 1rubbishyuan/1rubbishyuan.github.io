@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>为什么是优势函数 | Home</title>
@@ -20,16 +20,16 @@
 <meta property="og:url" content="http://example.com/2025/10/02/Advantage/index.html">
 <meta property="og:site_name" content="Home">
 <meta property="og:description" content="经过一段对强化学习相关工作的参与，对于强化学习算法中的优势函数在做什么事情有了一定的感知和理解，现记录于此防止本人鱼一般记忆带来的损失。 注：本文的讨论主要是针对policy-based的RL方法，对于Q-learning，DQN等直接输出value并且直接选择value大的作为输出的方法不予讨论 优化目标 对于一切的学习任务，首先都得从抽象的层面明确他的学习目标，然后再逐步将学习目标中的每一项具">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-10-02T13:05:00.000Z">
 <meta property="article:modified_time" content="2025-10-03T10:07:06.917Z">
-<meta property="article:author" content="原嘉锐">
+<meta property="article:author" content="Jiarui Yuan">
 <meta property="article:tag" content="ML基础">
 <meta property="article:tag" content="强化学习">
 <meta name="twitter:card" content="summary">
   <meta name="generator" content="Hexo 7.3.0">
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/10/02/Advantage/"},"headline":"为什么是优势函数","description":"经过一段对强化学习相关工作的参与，对于强化学习算法中的优势函数在做什么事情有了一定的感知和理解，现记录于此防止本人鱼一般记忆带来的损失。 注：本文的讨论主要是针对policy-based的RL方法，对于Q-learning，DQN等直接输出value并且直接选择value大的作为输出的方法不予讨论 优化目标 对于一切的","datePublished":"2025-10-02T13:05:00.000Z","dateModified":"2025-10-03T10:07:06.917Z","author":{"@type":"Person","name":"原嘉锐"},"publisher":{"@type":"Organization","name":"Home","logo":{"@type":"ImageObject","url":"http://example.com/img/page_avatar.png"}}}
+{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/10/02/Advantage/"},"headline":"为什么是优势函数","description":"经过一段对强化学习相关工作的参与，对于强化学习算法中的优势函数在做什么事情有了一定的感知和理解，现记录于此防止本人鱼一般记忆带来的损失。 注：本文的讨论主要是针对policy-based的RL方法，对于Q-learning，DQN等直接输出value并且直接选择value大的作为输出的方法不予讨论 优化目标 对于一切的","datePublished":"2025-10-02T13:05:00.000Z","dateModified":"2025-10-03T10:07:06.917Z","author":{"@type":"Person","name":"Jiarui Yuan"},"publisher":{"@type":"Organization","name":"Home","logo":{"@type":"ImageObject","url":"http://example.com/img/page_avatar.png"}}}
 </script>
 
   
@@ -67,9 +67,17 @@
     <a
       class="sea-menu-link "
       
-      href="/archives/"
+      href="/"
     >
-      归档
+      Home
+    </a>
+  
+    <a
+      class="sea-menu-link "
+      
+      href="/blog/"
+    >
+      Blog
     </a>
   
     <a
@@ -77,7 +85,7 @@
       
       href="/categories/"
     >
-      分类
+      Categories
     </a>
   
     <a
@@ -85,23 +93,7 @@
       
       href="/tags/"
     >
-      标签
-    </a>
-  
-    <a
-      class="sea-menu-link "
-      
-      href="/messages/"
-    >
-      留言
-    </a>
-  
-    <a
-      class="sea-menu-link "
-      
-      href="/about/"
-    >
-      关于
+      Tags
     </a>
   
 
@@ -238,7 +230,7 @@
         2025
       
       <span>·</span>
-      原嘉锐
+      Jiarui Yuan
     </div>
     <span class="split-line">|</span>
     <div class="sea-footer-theme-by">

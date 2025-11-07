@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>CameraRaw参数理解 | Home</title>
@@ -20,7 +20,7 @@
 <meta property="og:url" content="http://example.com/2025/09/22/CameraRaw/index.html">
 <meta property="og:site_name" content="Home">
 <meta property="og:description" content="经过一个暑假对CameraRaw的使用，对其中的参数有了一些初步的以及经验性的认识，但从思考层面尚存在欠缺，使用过程中往往是尝试和经验主义偏多，故在此整理主要分区的主要参数的作用(我会按照个人大致调整顺序来进行介绍，实际调整过程中则会根据情况返工，因为我在大多数情况下无法预测更改后的具体变化)，为之后的调色思考提供指导。 移除部分        首先是移除这个板块，在实际拍摄中，往往会存在镜头或C">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/img/%E7%A7%BB%E9%99%A4.png">
 <meta property="og:image" content="http://example.com/img/%E9%95%9C%E5%A4%B4%E6%A0%A1%E6%AD%A3.png">
 <meta property="og:image" content="http://example.com/img/%E5%8F%98%E6%8D%A2.png">
@@ -35,14 +35,14 @@
 <meta property="og:image" content="http://example.com/img/%E8%92%99%E7%89%88.png">
 <meta property="article:published_time" content="2025-09-22T13:33:00.000Z">
 <meta property="article:modified_time" content="2025-09-22T12:50:23.742Z">
-<meta property="article:author" content="原嘉锐">
+<meta property="article:author" content="Jiarui Yuan">
 <meta property="article:tag" content="调色">
 <meta property="article:tag" content="工具">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/%E7%A7%BB%E9%99%A4.png">
   <meta name="generator" content="Hexo 7.3.0">
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/09/22/CameraRaw/"},"headline":"CameraRaw参数理解","description":"经过一个暑假对CameraRaw的使用，对其中的参数有了一些初步的以及经验性的认识，但从思考层面尚存在欠缺，使用过程中往往是尝试和经验主义偏多，故在此整理主要分区的主要参数的作用(我会按照个人大致调整顺序来进行介绍，实际调整过程中则会根据情况返工，因为我在大多数情况下无法预测更改后的具体变化)，为之后的调色思考提供指导","datePublished":"2025-09-22T13:33:00.000Z","dateModified":"2025-09-22T12:50:23.742Z","author":{"@type":"Person","name":"原嘉锐"},"publisher":{"@type":"Organization","name":"Home","logo":{"@type":"ImageObject","url":"http://example.com/img/page_avatar.png"}}}
+{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/09/22/CameraRaw/"},"headline":"CameraRaw参数理解","description":"经过一个暑假对CameraRaw的使用，对其中的参数有了一些初步的以及经验性的认识，但从思考层面尚存在欠缺，使用过程中往往是尝试和经验主义偏多，故在此整理主要分区的主要参数的作用(我会按照个人大致调整顺序来进行介绍，实际调整过程中则会根据情况返工，因为我在大多数情况下无法预测更改后的具体变化)，为之后的调色思考提供指导","datePublished":"2025-09-22T13:33:00.000Z","dateModified":"2025-09-22T12:50:23.742Z","author":{"@type":"Person","name":"Jiarui Yuan"},"publisher":{"@type":"Organization","name":"Home","logo":{"@type":"ImageObject","url":"http://example.com/img/page_avatar.png"}}}
 </script>
 
   
@@ -80,9 +80,17 @@
     <a
       class="sea-menu-link "
       
-      href="/archives/"
+      href="/"
     >
-      归档
+      Home
+    </a>
+  
+    <a
+      class="sea-menu-link "
+      
+      href="/blog/"
+    >
+      Blog
     </a>
   
     <a
@@ -90,7 +98,7 @@
       
       href="/categories/"
     >
-      分类
+      Categories
     </a>
   
     <a
@@ -98,23 +106,7 @@
       
       href="/tags/"
     >
-      标签
-    </a>
-  
-    <a
-      class="sea-menu-link "
-      
-      href="/messages/"
-    >
-      留言
-    </a>
-  
-    <a
-      class="sea-menu-link "
-      
-      href="/about/"
-    >
-      关于
+      Tags
     </a>
   
 
@@ -309,7 +301,7 @@
         2025
       
       <span>·</span>
-      原嘉锐
+      Jiarui Yuan
     </div>
     <span class="split-line">|</span>
     <div class="sea-footer-theme-by">
